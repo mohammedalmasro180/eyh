@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
    <application
-        android:label="educate_your_hearing"
+        android:label="روحاني"
         android:name="${applicationName}"
 
        android:usesCleartextTraffic="true"

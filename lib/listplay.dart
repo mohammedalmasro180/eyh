@@ -1,8 +1,12 @@
 import 'dart:convert';
 
+import 'package:educate_your_hearing/data/Services_Data.dart';
 import 'package:educate_your_hearing/main.dart';
+import 'package:educate_your_hearing/widget/Card_Material.dart';
+import 'package:educate_your_hearing/widget/Card_Play.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+
 class plylist extends StatefulWidget {
   const plylist({Key? key}) : super(key: key);
 
@@ -11,27 +15,26 @@ class plylist extends StatefulWidget {
 }
 
 class _plylistState extends State<plylist> {
-  Future getdata() async{
 
-    Uri uri = Uri.parse("https://shahieen.tpowep.com/Material_json");
 
-    http.Response response = await http.get(uri);
-    String jsonsDataString = response.body.toString();
-    var    _data = jsonDecode(jsonsDataString);
-    print(_data);
-    return _data;
+  String url='';
+  String address='';
+  String img='';
+  String artits='';
 
-  }
+  double op=0.0 ;
+
 
   @override
   Widget build(BuildContext context) {
+    Size size;
     return Directionality(
       textDirection: TextDirection.rtl,
 
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.black,
-          title: Text("تعلم معنا",style: TextStyle(color: Colors.white),),
+          title: Text("روحاني",style: TextStyle(color: Colors.white),),
           actions: [
 
 
@@ -41,70 +44,59 @@ class _plylistState extends State<plylist> {
 
         body: FutureBuilder(
 
-            future: getdata(),
+            future: Services_Data.getdata(),
             builder:(BuildContext context, AsyncSnapshot snapshot) {
               if (snapshot.hasData) {
 
-                return ListView.builder(
+    return
+    SafeArea(
+    child: Column(
+    children: [
+    Expanded(
+    flex: 12,
+    child: Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: ListView.builder(
 
 
-                    itemCount: snapshot.data.length,
+    itemCount: snapshot.data.length,
 
-                    itemBuilder: (context,i) {
-                      return
-                        InkWell(
-                          onTap: (){},
+    itemBuilder: (context,i) {
+      return
+        InkWell(
+            onTap: () {
+              setState(() {
+                url = snapshot.data[i]['link'];
+//usPlay=true;
+                op = 1;
+                address = snapshot.data[i]['address'];
+                img = snapshot.data[i]['img'];
+                artits= snapshot.data[i]['artits'];
+              });
+            },
 
-                          child:Card(
-                            child: ListTile(
-                              title: Column(
-                                children: [
-                                  ListTile(
-                                   title:   Row(
-                                     children: [
-                                       Padding(
-                                         padding: const EdgeInsets.all(2.0),
-                                         child: CircleAvatar(
-                                           backgroundColor: Colors.white,
-                                           radius: 30,
-                                           child: Image.network(
-                                             "https://shahieen.tpowep.com/uploads/" +
-                                                 snapshot.data[i]['img'],
-                                           width: 250,
-                                             height: 250,
+            child: Card_Material
+              (address: snapshot.data[i]['address'],
+                img: snapshot.data[i]['img'],
+                arttis: snapshot.data[i]['artits']
+            )
+        );
+    }),
 
-                                           ),
-                                         ),
-                                       ),
-                                       Padding(
-                                         padding: const EdgeInsets.all(2.0),
-                                         child: Text(
+    ),
+    ),
+    Spacer(),
+    Expanded(
+    flex: 2,
+    child: Opacity(opacity: op,
+    child:
+Card_Player
+  (address: address,url: url,img: img,arttis: artits,)
 
-
-                                           snapshot.data[i]['address'],
-                                           style: TextStyle(
-                                               fontWeight: FontWeight.w600),),
-                                       ),
-                                     ],
-                                   ),
-
-trailing:      Padding(
-  padding: const EdgeInsets.all(2.0),
-  child:   playaudio(url: snapshot.data[i]['link'],),
-)
-                                    ,
-                                  )
-                                ],
-                                  ),
-                              ),
-
-
-                            ),
-                        );
-
-
-                    }
-                );
+    ),
+    ),
+    ])
+    );
 
               }
 
