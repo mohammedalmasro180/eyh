@@ -51,6 +51,7 @@ class _playlistState extends State<playlist> {
   }
 }
 
+
 class playaudio extends StatefulWidget {
   final String url;
   const playaudio({Key? key,required this.url}) : super(key: key);
@@ -61,15 +62,14 @@ class playaudio extends StatefulWidget {
 }
 
 class _playaudioState extends State<playaudio> {
-    final audioPlayer=AudioPlayer();
-    Duration duration=Duration.zero;
-    Duration position=Duration.zero;
-
-    @override
+  final audioPlayer=AudioPlayer();
+  Duration duration=Duration.zero;
+  Duration position=Duration.zero;
+  bool usPlay=false;
+  @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    bool usPlay=false;
     audioPlayer.onPlayerStateChanged.listen((state) {
       setState(() {
         usPlay=state==PlayerState.PLAYING;
@@ -87,47 +87,37 @@ class _playaudioState extends State<playaudio> {
       });
     });
 
-    }
-    @override
-    void dispose() {
+  }
+  @override
+  void dispose() {
     audioPlayer.dispose();
-      // TODO: implement dispose
+    // TODO: implement dispose
     super.dispose();
   }
-    bool     usPlay=false;
-    @override
+
+  @override
   Widget build(BuildContext context) {
-      String url="";
-    usPlay=false;
-      return  Padding(
-        padding: const EdgeInsets.all(2.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-
-          children: [
+    String url="";
+    return  Column(
+      children: [
 
 
 
-             CircleAvatar(
-               radius: 22,
-               child: IconButton(
-                 icon: Icon(
-                   usPlay?
-                   Icons.pause:Icons.play_arrow,size: 25,),
-                 onPressed: () {
-                   if(!usPlay){
+        CircleAvatar(
+          radius: 22,
+          child: IconButton(
+            icon: Icon(usPlay?Icons.pause:Icons.play_arrow,size: 25,), onPressed: () {
+            if(usPlay){
+              audioPlayer.pause();
+            }
+            else
 
-                     audioPlayer.pause();
-                   }
-                   else
+              audioPlayer.play(widget.url);
 
-                   audioPlayer.play(widget.url);
-
-                   },
-               ),
-             )
-          ],
-        ),
-      );
+          },
+          ),
+        )
+      ],
+    );
   }
 }

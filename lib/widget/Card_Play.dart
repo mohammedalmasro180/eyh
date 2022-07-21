@@ -64,9 +64,11 @@ class _Card_PlayerState extends State<Card_Player> {
 
 
 
-                trailing: Padding(
-                  padding: const EdgeInsets.all(2.0),
-                  child: playaudio(url:widget.url,                ),
+                trailing: Column(
+                  children: [
+                    playaudio(url:widget.url,                ),
+                    IconButton(onPressed: (){}, icon: Icon(Icons.favorite_border))
+                  ],
                 )
                 ,
               )
